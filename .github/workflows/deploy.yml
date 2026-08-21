@@ -44,7 +44,11 @@ jobs:
           node-version: "20"
 
       - name: Install Node.js dependencies
-        run: npm ci
+        # `npm ci` chokes on a known npm quirk with nested platform-optional dependencies
+        # (lightningcss's musl variant loses its "version" field when hoisted under certain
+        # npm versions) even though the lockfile installs fine locally. `npm install` re-resolves
+        # instead of validating the lockfile exactly, which sidesteps it.
+        run: npm install
 
       - name: Add node_modules/.bin to PATH
         # Hugo's TailwindCSS integration shells out to the `tailwindcss` binary; it must be
