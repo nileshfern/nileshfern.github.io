@@ -44,7 +44,12 @@ jobs:
           node-version: "20"
 
       - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+        run: npm ci
+
+      - name: Add node_modules/.bin to PATH
+        # Hugo's TailwindCSS integration shells out to the `tailwindcss` binary; it must be
+        # discoverable on PATH, not just present in node_modules.
+        run: echo "$PWD/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Setup Pages
         id: pages
