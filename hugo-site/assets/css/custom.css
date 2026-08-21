@@ -157,15 +157,15 @@ a:hover {
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 .gk-hero-text h1 {
-  font-size: 1.85rem;
-  margin: 0 0 0.15rem;
+  font-size: 1.3rem;
+  margin: 0 0 0.1rem;
   font-weight: 700;
 }
 .gk-hero-role {
   color: var(--color-text-muted);
-  font-size: 1.02rem;
-  margin: 0 0 1rem;
-  line-height: 1.5;
+  font-size: 0.92rem;
+  margin: 0 0 0.85rem;
+  line-height: 1.4;
 }
 .gk-hero-intro {
   font-size: 1.02rem;
