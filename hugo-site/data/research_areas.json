@@ -1,0 +1,29 @@
+{
+  "areas": [
+    {
+      "slug": "labor-markets-migration",
+      "name": "Labor Markets & Job Search",
+      "description": "How information frictions, search costs, and land tenure shape who works where."
+    },
+    {
+      "slug": "international-migration",
+      "name": "International Migration & Labor Regulation",
+      "description": "Recruitment intermediaries, migrant welfare, and policy restrictions on migration from Sri Lanka to the Gulf."
+    },
+    {
+      "slug": "agricultural-technology",
+      "name": "Agricultural Technology & Information",
+      "description": "Mobile-phone extension services, technology adoption, and peer information exchange among farmers in India."
+    },
+    {
+      "slug": "discrimination-identity",
+      "name": "Discrimination, Identity & Conflict",
+      "description": "In-group bias and identity threat, studied through cricket umpiring decisions and India-Pakistan rivalry."
+    },
+    {
+      "slug": "field-methods",
+      "name": "Field Experimental Methods",
+      "description": "Incentive-compatible elicitation techniques for use in low-literacy field settings."
+    }
+  ]
+}

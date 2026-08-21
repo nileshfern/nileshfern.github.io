@@ -1,0 +1,2 @@
+{{/* Spam-proof email address. Usage: {{< email user="name" domain="example.com" >}} */}}
+{{ partial "email-link.html" (dict "user" (.Get "user") "domain" (.Get "domain")) }}

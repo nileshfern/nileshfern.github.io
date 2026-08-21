@@ -1,0 +1,19 @@
+<footer class="gk-footer">
+  <div class="gk-footer-inner">
+    <div>
+      <div style="font-weight:700; letter-spacing:0.03em; margin-bottom:0.5rem;">A. NILESH FERNANDO</div>
+      <div style="opacity:0.75; font-size:0.85rem;">Department of Economics, King's Business School<br>King's College London</div>
+    </div>
+    <nav class="gk-footer-nav" aria-label="Footer">
+      {{ range site.Menus.main }}
+      <a href="{{ if findRE `^#` .URL }}{{ site.Home.RelPermalink }}{{ .URL }}{{ else }}{{ .URL | relLangURL }}{{ end }}">{{ .Name }}</a>
+      {{ end }}
+    </nav>
+  </div>
+  <div class="gk-footer-bottom">
+    <span>&copy; {{ now.Year }} A. Nilesh Fernando</span>
+    {{ if site.Params.mysite.credit }}
+    <span class="gk-footer-credit">Created using <a href="https://garyking.org/mysite" target="_blank" rel="noopener">GaryKing.org/mysite</a></span>
+    {{ end }}
+  </div>
+</footer>

@@ -1,0 +1,15 @@
+# A. Nilesh Fernando
+
+A. Nilesh Fernando is an Associate Professor in the Department of Economics at King's Business
+School, King's College London. He is an applied microeconomist working on labor and development
+economics, with research on labor market information, international migration, agricultural
+technology adoption, and discrimination. He is a Faculty Affiliate of J-PAL and an Affiliate of
+BREAD.
+
+Key pages:
+- Home (bio, C.V., research statement, contact): https://www.nileshfernando.com/
+- Research (publications and working papers): https://www.nileshfernando.com/publication/
+- Research areas: https://www.nileshfernando.com/#research-areas
+- Policy & Impact: https://www.nileshfernando.com/policy/
+- Data & Code: https://www.nileshfernando.com/data-code/
+- Teaching: https://www.nileshfernando.com/teaching/

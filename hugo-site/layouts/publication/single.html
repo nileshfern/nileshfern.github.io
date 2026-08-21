@@ -1,0 +1,50 @@
+{{ define "main" }}
+<a class="skip-link" href="#gk-content">Skip to content</a>
+<div class="gk-container gk-main" id="gk-content">
+  <nav class="gk-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ site.Home.RelPermalink }}">Home</a> / <a href="{{ (site.GetPage "publication").RelPermalink }}">Research</a> / <span>{{ .Title }}</span>
+  </nav>
+
+  <article>
+    <header class="gk-pub-header">
+      <h1>{{ .Title }}</h1>
+      {{ with .Params.authors }}
+      <p class="gk-pub-authors">{{ partial "authors-line.html" (dict "authors" .) }}</p>
+      {{ end }}
+      {{ if .Params.publication }}
+      <p class="gk-pub-venue">{{ .Params.publication }}</p>
+      {{ else if .Date }}
+      <p class="gk-pub-venue">{{ .Date.Format "2006" }}</p>
+      {{ end }}
+    </header>
+
+    {{ $featured := (.Resources.ByType "image").GetMatch "*featured*" }}
+    {{ with $featured }}
+      <img class="gk-pub-cover" src="{{ .RelPermalink }}" alt="Cover of {{ $.Title }}" loading="lazy" width="220">
+      {{ with $.Params.image_credit }}<p class="gk-cite-meta">{{ . }}</p>{{ end }}
+    {{ end }}
+
+    {{ with .Params.abstract }}
+    <div class="gk-abstract">
+      <h2>Abstract</h2>
+      <p>{{ . }}</p>
+    </div>
+    {{ end }}
+
+    <div class="gk-pub-links">
+      {{ partial "page_links.html" (dict "page" . "is_list" false) }}
+    </div>
+
+    {{ with .Params.dataverse_url }}
+    <div class="gk-dataset-banner">
+      {{ if $.Params.related_paper }}
+        Replication data for: <a href="{{ (site.GetPage (printf "publication/%s" $.Params.related_paper)).RelPermalink }}">{{ (site.GetPage (printf "publication/%s" $.Params.related_paper)).Title }}</a>.
+      {{ end }}
+      Data available via <a href="{{ . }}" target="_blank" rel="noopener">Harvard Dataverse</a>.
+    </div>
+    {{ end }}
+
+    {{ partial "related_finder.html" . }}
+  </article>
+</div>
+{{ end }}

@@ -1,0 +1,207 @@
+{{ define "main" }}
+<a class="skip-link" href="#gk-content">Skip to content</a>
+<div class="gk-container gk-main" id="gk-content">
+  <nav class="gk-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ site.Home.RelPermalink }}">Home</a> / <span>Research</span>
+  </nav>
+  <header style="margin-bottom:0.5rem;">
+    <h1 class="gk-section-heading" style="font-size:1.7rem;">Research</h1>
+    <p class="gk-section-sub">Published articles, work under review, and ongoing projects.</p>
+  </header>
+
+  {{ $pages := .Pages }}
+  {{ $years := slice }}
+  {{ range $pages }}{{ $y := .Date.Format "2006" }}{{ if not (in $years $y) }}{{ $years = $years | append $y }}{{ end }}{{ end }}
+  {{ $years = sort $years "value" "desc" }}
+  {{ $areas := site.Data.research_areas.areas }}
+
+  {{ $entries := slice }}
+  {{ range $pages }}
+    {{ $p := . }}
+    {{ $types := $p.Params.publication_types | default slice }}
+    {{ $tab := "publications" }}
+    {{ if in $types "report" }}{{ $tab = "working-papers" }}{{ end }}
+    {{ $entries = $entries | append (dict
+      "title" $p.Title
+      "url" $p.RelPermalink
+      "date" ($p.Date.Format "2006")
+      "authors" ($p.Params.authors | default slice)
+      "publication" ($p.Params.publication | default "")
+      "abstract" ($p.Params.abstract | default "")
+      "tab" $tab
+      "areas" ($p.Params.research_areas | default slice)
+    ) }}
+  {{ end }}
+
+  <div class="gk-writings-layout">
+    <aside class="gk-sidebar" aria-label="Filter research">
+      <h3>Search</h3>
+      <input type="text" id="gk-search" placeholder="Title, author, venue...">
+
+      <h3>Research area</h3>
+      <select id="gk-area-filter">
+        <option value="">All areas</option>
+        {{ range $areas }}
+        <option value="{{ .slug }}">{{ .name }}</option>
+        {{ end }}
+      </select>
+
+      <h3>Year</h3>
+      <div class="gk-check-list gk-year-scroll" id="gk-year-filters">
+        {{ range $years }}
+        <label class="gk-check-row"><input type="checkbox" value="{{ . }}" class="gk-year-cb"> {{ . }}</label>
+        {{ end }}
+      </div>
+
+      <button class="gk-reset-btn" id="gk-reset">Reset filters</button>
+    </aside>
+
+    <div>
+      <nav class="gk-pub-tabs" role="tablist" aria-label="Research by type">
+        <button class="tab-btn active" data-tab="publications" role="tab" aria-selected="true">Publications</button>
+        <button class="tab-btn" data-tab="working-papers" role="tab" aria-selected="false">Working Papers</button>
+      </nav>
+
+      <div class="gk-toolbar">
+        <span class="result-count">{{ len $entries }} of {{ len $entries }} results</span>
+        <div style="display:flex; gap:0.6rem; align-items:center;">
+          <span class="gk-sort">
+            <label class="sr-only" for="gk-sort">Sort</label>
+            <select id="gk-sort">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="title-az">Title A&ndash;Z</option>
+              <option value="title-za">Title Z&ndash;A</option>
+            </select>
+          </span>
+          <button class="gk-cite-btn" id="gk-download-bib">Download citations</button>
+        </div>
+      </div>
+
+      <div id="gk-pub-list">
+        {{ range $entries }}
+        <article class="pub-item" data-tab="{{ .tab }}" data-year="{{ .date }}" data-areas="{{ delimit .areas " " }}"
+                 data-title="{{ lower .title }}" data-authors="{{ lower (delimit .authors ", ") }}" data-venue="{{ lower .publication }}" data-abstract="{{ lower .abstract }}">
+          <div class="gk-cite-row" style="border:0; padding:0;">
+            <span class="gk-cite-kind">{{ if eq .tab "working-papers" }}Working Paper{{ else }}Publication{{ end }}</span>
+            <a class="gk-cite-title" href="{{ .url }}">{{ .title }}</a>
+            <div class="gk-cite-meta">{{ partial "authors-line.html" (dict "authors" .authors) }}{{ if .publication }} &middot; {{ .publication }}{{ else }} &middot; {{ .date }}{{ end }}</div>
+            {{ with .abstract }}<p class="pub-abstract">{{ . }}</p>{{ end }}
+          </div>
+        </article>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var items = Array.prototype.slice.call(document.querySelectorAll('.pub-item'));
+  var tabs = document.querySelectorAll('.tab-btn');
+  var countEl = document.querySelector('.result-count');
+  var searchEl = document.getElementById('gk-search');
+  var areaEl = document.getElementById('gk-area-filter');
+  var sortEl = document.getElementById('gk-sort');
+  var yearCbs = document.querySelectorAll('.gk-year-cb');
+  var listEl = document.getElementById('gk-pub-list');
+  var currentTab = 'publications';
+
+  function activeYears() {
+    return Array.prototype.slice.call(yearCbs).filter(function(cb){ return cb.checked; }).map(function(cb){ return cb.value; });
+  }
+
+  function applyFilters() {
+    var q = (searchEl.value || '').toLowerCase().trim();
+    var area = areaEl.value;
+    var years = activeYears();
+    var visible = 0;
+    items.forEach(function(item) {
+      var show = (item.dataset.tab === currentTab);
+      if (show && area) {
+        var areas = (item.dataset.areas || '').split(' ');
+        show = areas.indexOf(area) !== -1;
+      }
+      if (show && years.length) {
+        show = years.indexOf(item.dataset.year) !== -1;
+      }
+      if (show && q) {
+        var hay = item.dataset.title + ' ' + item.dataset.authors + ' ' + item.dataset.venue + ' ' + item.dataset.abstract;
+        show = hay.indexOf(q) !== -1;
+      }
+      item.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    if (countEl) countEl.textContent = visible + ' of ' + items.length + ' results';
+  }
+
+  function applySort() {
+    var mode = sortEl.value;
+    var sorted = items.slice().sort(function(a, b) {
+      if (mode === 'title-az') return a.dataset.title.localeCompare(b.dataset.title);
+      if (mode === 'title-za') return b.dataset.title.localeCompare(a.dataset.title);
+      if (mode === 'oldest') return a.dataset.year.localeCompare(b.dataset.year);
+      return b.dataset.year.localeCompare(a.dataset.year);
+    });
+    sorted.forEach(function(item) { listEl.appendChild(item); });
+  }
+
+  function filterByTab(tabId) {
+    currentTab = tabId;
+    tabs.forEach(function(btn) {
+      var isActive = btn.dataset.tab === tabId;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    applyFilters();
+    history.replaceState(null, '', '#' + tabId);
+  }
+
+  tabs.forEach(function(btn) {
+    btn.addEventListener('click', function() { filterByTab(btn.dataset.tab); });
+  });
+
+  searchEl.addEventListener('input', applyFilters);
+  areaEl.addEventListener('change', applyFilters);
+  yearCbs.forEach(function(cb) { cb.addEventListener('change', applyFilters); });
+  sortEl.addEventListener('change', applySort);
+
+  document.getElementById('gk-reset').addEventListener('click', function() {
+    searchEl.value = '';
+    areaEl.value = '';
+    yearCbs.forEach(function(cb) { cb.checked = false; });
+    sortEl.value = 'newest';
+    applySort();
+    filterByTab('publications');
+  });
+
+  document.getElementById('gk-download-bib').addEventListener('click', function() {
+    var lines = [];
+    items.forEach(function(item) {
+      if (item.style.display === 'none') return;
+      var titleEl = item.querySelector('.gk-cite-title');
+      var title = titleEl ? titleEl.textContent : '';
+      var key = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40) + item.dataset.year;
+      lines.push('@article{' + key + ',');
+      lines.push('  title = {' + title + '},');
+      lines.push('  author = {' + item.dataset.authors + '},');
+      lines.push('  year = {' + item.dataset.year + '},');
+      lines.push('  note = {' + item.dataset.venue + '}');
+      lines.push('}');
+      lines.push('');
+    });
+    var blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'nilesh-fernando-citations.bib';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  var hash = location.hash.replace('#', '') || 'publications';
+  filterByTab(hash);
+  applySort();
+})();
+</script>
+{{ end }}

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: {{ "sitemap.xml" | absURL }}
+
+# AI agents and crawlers: see {{ "llms.txt" | absURL }} for a machine-readable summary of this site.

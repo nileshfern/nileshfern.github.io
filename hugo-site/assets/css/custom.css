@@ -1,0 +1,760 @@
+/* ==========================================================================
+   A. Nilesh Fernando — site stylesheet
+   Visual model: minimalist academic site (sidebar photo, generous whitespace,
+   grayscale with a single understated accent). See WEBSITE_PRINCIPLES.md.
+   ========================================================================== */
+
+:root {
+  --color-bg: #faf3e2;
+  --color-surface: #f3e8ce;
+  --color-surface-2: #ecdfbe;
+  --color-text: #2a201c;
+  --color-text-muted: #7a6a56;
+  --color-border: #e2d3ac;
+  --color-accent: #7a2331;
+  --color-institution: #7a2331;
+  --color-link: #8c3440;
+  --color-link-hover: #5c1a24;
+  --color-focus: #c9974a;
+  --color-footer-bg: #241014;
+  --color-footer-text: #f0e2c4;
+}
+
+/* ---------- Force light mode everywhere ---------- */
+:root { color-scheme: light; }
+html, html.dark, body, .dark\:bg-hb-dark,
+html.dark body, .dark #site-header, #site-header {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text) !important;
+}
+.theme-toggle,
+button[accesskey="t"] {
+  display: none !important;
+}
+
+* { border-color: var(--color-border); }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.55;
+  font-size: 16px;
+}
+
+/* ---------- Skip link ---------- */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 200;
+  background: var(--color-institution);
+  color: #fff;
+  padding: 0.6em 1em;
+  border-radius: 0 0 6px 0;
+  font-size: 0.9rem;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Layout shell ---------- */
+.gk-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.gk-main {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+/* ---------- Links ---------- */
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+.gk-prose a {
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 2px;
+}
+.gk-prose a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* ---------- Navbar tweaks (vendor navbar retained; balance padding) ---------- */
+#site-header .navbar {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.1rem 1.5rem !important;
+  align-items: center;
+}
+#site-header .navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-size: 1.02rem;
+  color: var(--color-text) !important;
+}
+#site-header .nav-link {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+#site-header .nav-link:hover,
+#site-header .nav-link.active {
+  color: var(--color-institution);
+}
+#site-header {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+/* ---------- Breadcrumb ---------- */
+.gk-breadcrumb {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+}
+.gk-breadcrumb a { color: var(--color-text-muted); text-decoration: underline; text-decoration-color: var(--color-border); }
+.gk-breadcrumb a:hover { color: var(--color-link-hover); }
+
+/* ==========================================================================
+   Homepage
+   ========================================================================== */
+.gk-hero {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  padding: 1rem 0 3rem;
+}
+.gk-hero-photo {
+  flex: 0 0 auto;
+}
+.gk-hero-photo img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.gk-hero-text h1 {
+  font-size: 1.85rem;
+  margin: 0 0 0.15rem;
+  font-weight: 700;
+}
+.gk-hero-role {
+  color: var(--color-text-muted);
+  font-size: 1.02rem;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+.gk-hero-intro {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  max-width: 62ch;
+  margin-bottom: 1em;
+}
+.gk-hero-contact {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.4rem;
+}
+.gk-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .gk-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .gk-hero-actions { justify-content: center; }
+}
+
+/* Buttons & links — one consistent treatment per role */
+.gk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  background: var(--color-institution);
+  color: #fff !important;
+  padding: 0.55em 1.1em;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: background-color 0.18s, transform 0.18s;
+}
+.gk-btn:hover {
+  background: var(--color-link-hover);
+  transform: translateY(-1px);
+}
+.gk-link-arrow {
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+}
+.gk-link-arrow:hover { text-decoration-color: currentColor; }
+
+/* Research area accordions */
+#research-areas {
+  scroll-margin-top: 96px;
+}
+.gk-section-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+}
+.gk-section-sub {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+.gk-area {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+.gk-area-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.gk-area-toggle:hover { background: var(--color-surface); }
+.gk-area-toggle .gk-chevron {
+  transition: transform 0.18s;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+.gk-area.open .gk-chevron { transform: rotate(180deg); }
+.gk-area-body {
+  display: none;
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+.gk-area.open .gk-area-body { display: block; }
+.gk-area-body p.gk-area-desc {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  margin: 1rem 0 0.75rem;
+}
+.gk-area-items { border-top: 1px dashed var(--color-border); }
+.gk-view-all {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Dense citation rows (used on homepage previews + writings list)
+   ========================================================================== */
+.gk-cite-row {
+  display: block;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+.gk-cite-row:last-child { border-bottom: none; }
+.gk-cite-title {
+  font-weight: 600;
+  color: var(--color-text);
+}
+.gk-cite-row a.gk-cite-title:hover { color: var(--color-link-hover); }
+.gk-cite-meta {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  margin-top: 0.15rem;
+}
+.gk-cite-kind {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-institution);
+  margin-right: 0.5em;
+}
+
+/* ==========================================================================
+   Writings list page (tabs + sidebar + filterable list)
+   ========================================================================== */
+.gk-writings-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .gk-writings-layout { grid-template-columns: 1fr; }
+}
+
+.gk-pub-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.75rem 0 0.85rem;
+  margin-bottom: 1.25rem;
+}
+.tab-btn {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+}
+.tab-btn:hover { color: var(--color-text); background: var(--color-surface); }
+.tab-btn.active {
+  color: var(--color-institution);
+  border-bottom-color: var(--color-institution);
+}
+
+.gk-sidebar {
+  position: sticky;
+  top: 4.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  padding: 1.1rem;
+}
+.gk-sidebar h3 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin: 1.1rem 0 0.5rem;
+}
+.gk-sidebar h3:first-child { margin-top: 0; }
+.gk-sidebar input[type="text"],
+.gk-sidebar select {
+  width: 100%;
+  padding: 0.5em 0.6em;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-bg);
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+.gk-sidebar input[type="text"]:focus,
+.gk-sidebar select:focus { border-color: var(--color-institution); }
+
+.gk-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.gk-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+.gk-check-row input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--color-institution);
+}
+.gk-year-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.gk-reset-btn {
+  margin-top: 1.1rem;
+  width: 100%;
+  padding: 0.5em;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-bg);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.gk-reset-btn:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+
+.gk-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.result-count {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+.gk-sort select {
+  padding: 0.4em 0.6em;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-bg);
+  font-size: 0.85rem;
+}
+.gk-cite-btn {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4em 0.7em;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.gk-cite-btn:hover { color: var(--color-text); }
+
+.pub-item {
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 0;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.pub-item:last-child { border-bottom: none; }
+.pub-item .gk-cite-title { font-size: 1rem; }
+.pub-item .pub-abstract {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  margin-top: 0.4rem;
+  max-width: 75ch;
+}
+.pub-item .pub-links {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ==========================================================================
+   Publication / talk single pages
+   ========================================================================== */
+.gk-pub-header {
+  margin-bottom: 1.75rem;
+}
+.gk-pub-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 0.6rem;
+}
+.gk-pub-authors {
+  font-size: 1rem;
+  color: var(--color-text);
+  margin-bottom: 0.2rem;
+}
+.gk-pub-venue {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+.gk-pub-cover {
+  max-width: 220px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+.hb-attachment-link,
+.gk-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.5em 0.9em;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+.hb-attachment-link:hover,
+.gk-link-btn:hover {
+  border-color: var(--color-institution);
+  color: var(--color-institution);
+  text-decoration: none;
+}
+.gk-pub-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.5rem 0;
+}
+.gk-abstract {
+  margin: 1.5rem 0;
+  max-width: 72ch;
+}
+.gk-abstract h2 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+.gk-dataset-banner {
+  background: #eef1ea;
+  border: 1px solid #d7ddcc;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  margin: 1.25rem 0;
+}
+.gk-dataset-banner a { font-weight: 600; }
+
+/* See Also */
+.gk-see-also {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+.gk-see-also h2 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+.gk-see-also ul { list-style: none; margin: 0; padding: 0; }
+.gk-see-also li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
+}
+.gk-see-also li:last-child { border-bottom: none; }
+.gk-kind-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-institution);
+  margin-right: 0.5em;
+}
+
+/* ==========================================================================
+   Generic content page (bio, teaching, contact)
+   ========================================================================== */
+.gk-page-header h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+.gk-prose { max-width: 72ch; }
+.gk-prose p { margin: 0 0 1.25em; }
+.gk-prose h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 2rem 0 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+.gk-prose h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.gk-prose ul, .gk-prose ol { margin: 0 0 1.25em 1.25em; }
+.gk-prose ul { list-style: disc; }
+.gk-prose ol { list-style: decimal; }
+.gk-prose ul ul, .gk-prose ol ul { list-style: circle; margin-top: 0.35em; }
+.gk-prose li { margin-bottom: 0.35em; }
+.gk-prose li::marker { color: var(--color-institution); }
+.gk-cv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.gk-cv-table td { padding: 0.35rem 0; vertical-align: top; }
+.gk-cv-table td.gk-cv-role { padding-right: 1rem; }
+.gk-cv-table td.gk-cv-year {
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  text-align: right;
+  width: 1%;
+}
+.gk-cv-item-title { font-weight: 600; }
+.gk-cv-item-sub { color: var(--color-text-muted); font-size: 0.88rem; }
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.gk-footer {
+  background: var(--color-footer-bg);
+  color: var(--color-footer-text);
+  padding: 2.5rem 0 1.5rem;
+  margin-top: 4rem;
+}
+.gk-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.gk-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-size: 0.88rem;
+}
+.gk-footer-nav a { color: var(--color-footer-text); opacity: 0.85; }
+.gk-footer-nav a:hover { opacity: 1; text-decoration: underline; }
+.gk-footer-bottom {
+  max-width: 1200px;
+  margin: 1.5rem auto 0;
+  padding: 1rem 1.5rem 0;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+.gk-footer-credit { text-align: right; }
+.gk-footer-credit a { color: var(--color-footer-text); text-decoration: underline; }
+
+/* ==========================================================================
+   Motion & misc
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+.gk-card-hover {
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+.gk-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  border-color: var(--color-institution);
+}
+
+img { max-width: 100%; }
+
+/* ==========================================================================
+   Social rail — small, muted, fixed. Hidden on narrow screens.
+   ========================================================================== */
+.gk-social-rail {
+  position: fixed;
+  left: 1.1rem;
+  bottom: 1.1rem;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.gk-social-rail a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  opacity: 0.75;
+  transition: opacity 0.18s, color 0.18s, border-color 0.18s, transform 0.18s;
+}
+.gk-social-rail a:hover,
+.gk-social-rail a:focus-visible {
+  opacity: 1;
+  color: var(--color-institution);
+  border-color: var(--color-institution);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+@media (max-width: 640px) {
+  .gk-social-rail { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gk-social-rail a { transition: none; }
+}
+
+/* ==========================================================================
+   Numbered list pages (Policy & Impact, Data & Code) — spaced out, not dense.
+   ========================================================================== */
+.gk-numbered-list {
+  margin: 1.5rem 0 0 1.4rem;
+  max-width: 68ch;
+}
+.gk-numbered-list > li {
+  margin-bottom: 1.6rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--color-border);
+  line-height: 1.55;
+}
+.gk-numbered-list > li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.gk-numbered-list > li::marker {
+  font-weight: 700;
+  color: var(--color-institution);
+}
+.gk-sublinks {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.gk-sublinks a {
+  display: inline-block;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.3em 0.7em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--color-surface);
+  text-decoration: none !important;
+}
+.gk-sublinks a:hover {
+  border-color: var(--color-institution);
+  color: var(--color-institution);
+}

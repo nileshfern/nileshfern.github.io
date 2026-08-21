@@ -1,0 +1,24 @@
+{{/*
+  Render a comma-separated author byline with co-author names linked to their best external page
+  (personal site > university page > LinkedIn), resolved in data/coauthors.json. The site owner's
+  own name is never linked. Unresolved names render as plain text.
+  Input: dict { authors: []string }
+  Output: safe inline HTML
+*/}}
+{{ $owner := "A. Nilesh Fernando" }}
+{{ $coauthors := site.Data.coauthors }}
+{{ $parts := slice }}
+{{ range .authors }}
+  {{ $name := . }}
+  {{ if eq $name $owner }}
+    {{ $parts = $parts | append $name }}
+  {{ else }}
+    {{ $entry := index $coauthors $name }}
+    {{ if $entry }}
+      {{ $parts = $parts | append (printf "<a href=%q target=\"_blank\" rel=\"noopener\">%s</a>" $entry.url $name) }}
+    {{ else }}
+      {{ $parts = $parts | append $name }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ delimit $parts ", " | safeHTML }}

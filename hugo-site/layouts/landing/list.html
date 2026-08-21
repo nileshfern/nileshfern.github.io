@@ -1,0 +1,67 @@
+{{ define "main" }}
+<a class="skip-link" href="#gk-content">Skip to content</a>
+<div class="gk-container gk-main" id="gk-content">
+
+  <section class="gk-hero">
+    <div class="gk-hero-photo">
+      <img src="{{ "images/nilesh-fernando.jpg" | relURL }}" alt="Portrait of A. Nilesh Fernando" width="200" height="200">
+    </div>
+    <div class="gk-hero-text">
+      <h1>A. Nilesh Fernando</h1>
+      <p class="gk-hero-role">Associate Professor, Department of Economics, King's Business School<br>King's College London</p>
+      <p class="gk-hero-intro">A. Nilesh Fernando is an Associate Professor in the <a href="https://www.kcl.ac.uk/business/research/departments/economics" target="_blank" rel="noopener">Department of Economics</a> at <a href="https://www.kcl.ac.uk/business" target="_blank" rel="noopener">King&rsquo;s Business School</a>, King&rsquo;s College London. His research uses field experiments and quasi-experimental methods to study how information frictions shape labor markets and agricultural technology adoption in South Asia, and to measure the causal effects of interventions and regulatory policy designed to address them.</p>
+      <p class="gk-hero-intro">His research has appeared in leading journals including the <em>Economic Journal</em>, <em>American Economic Review-Insights</em>, <em>The Review of Economics and Statistics</em>, and the <em>Journal of Development Economics</em>, and has been covered by media outlets including <a href="{{ "files/the-hindu-cricket.pdf" | relURL }}" target="_blank" rel="noopener">The Hindu</a>, <a href="https://www.ft.com/content/b3ce3780-4470-11e2-932a-00144feabdc0" target="_blank" rel="noopener">The Financial Times</a>, <a href="https://www.livemint.com/Sports/jx5VUNovWZVdqA5vCCefNL/The-one-cricket-record-list-where-India-is-missing.html" target="_blank" rel="noopener">Mint</a>, <a href="https://www.dawn.com/news/1241062" target="_blank" rel="noopener">Dawn</a>, <a href="{{ "files/hbr-daily-stat.pdf" | relURL }}" target="_blank" rel="noopener">Harvard Business Review</a>, and <a href="https://audioboom.com/posts/8185729-improving-the-welfare-of-migrant-workers" target="_blank" rel="noopener">VoxDevTalks (Podcast)</a>.</p>
+      <p class="gk-hero-intro">He is a Faculty Affiliate of <a href="https://www.povertyactionlab.org/" target="_blank" rel="noopener">J-PAL</a> and an Affiliate of <a href="https://www.ibread.org/" target="_blank" rel="noopener">BREAD</a>. He received his Ph.D. from Harvard University in 2015 and his B.A. from Hampshire College in 2007.</p>
+      <p class="gk-hero-contact">Email: {{ partial "email-link.html" (dict "user" "nilesh.fernando" "domain" "kcl.ac.uk") }}</p>
+      <div class="gk-hero-actions">
+        <a class="gk-btn" href="{{ "publication/" | relURL }}">View all research &rarr;</a>
+        <a class="gk-link-arrow" href="{{ "files/CV.pdf" | relURL }}" target="_blank" rel="noopener">Download C.V. (PDF)</a>
+        <a class="gk-link-arrow" href="{{ "files/research-statement.pdf" | relURL }}" target="_blank" rel="noopener">Research Statement (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="gk-section-heading" id="research-areas">Research Areas</h2>
+    <p class="gk-section-sub">Five threads run through the work below: labor markets, migration, agricultural technology, discrimination, and the field methods used to study them.</p>
+
+    {{ $areas := site.Data.research_areas.areas }}
+    {{ $allPubs := where site.RegularPages "Section" "publication" }}
+    {{ range $i, $area := $areas }}
+      {{ $items := where $allPubs "Params.research_areas" "intersect" (slice $area.slug) }}
+      {{ $items = $items | first 5 }}
+      <div class="gk-area{{ if eq $i 0 }} open{{ end }}">
+        <button class="gk-area-toggle" aria-expanded="{{ if eq $i 0 }}true{{ else }}false{{ end }}">
+          <span>{{ $area.name }}</span>
+          <svg class="gk-chevron" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="gk-area-body">
+          <p class="gk-area-desc">{{ $area.description }}</p>
+          <div class="gk-area-items">
+            {{ range $items }}
+            <div class="gk-cite-row">
+              <a class="gk-cite-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+              <div class="gk-cite-meta">{{ partial "authors-line.html" (dict "authors" (.Params.authors | default slice)) }}{{ with .Params.publication }} &middot; {{ . }}{{ end }}</div>
+            </div>
+            {{ end }}
+          </div>
+          <a class="gk-view-all" href="{{ "publication/" | relURL }}">View all &rarr;</a>
+        </div>
+      </div>
+    {{ end }}
+  </section>
+
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('.gk-area-toggle').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var area = btn.closest('.gk-area');
+      var isOpen = area.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
+})();
+</script>
+{{ end }}

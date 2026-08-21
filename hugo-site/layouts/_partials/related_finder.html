@@ -1,0 +1,136 @@
+{{/*
+  Automatic "See Also" cross-linking.
+  Input: the current page (Context)
+  Output: HTML block (empty string if nothing qualifies)
+*/}}
+{{ $page := . }}
+{{ $stopwords := slice "a" "an" "and" "the" "of" "for" "in" "on" "to" "with" "by" "at" "as" "is" "are" "be" "or" "from" "into" "using" "via" "new" "not" "no" "it" "its" "we" "our" "their" "you" "your" "this" "that" "these" "those" "but" "if" "than" "then" "so" "can" "will" "would" "could" "should" "may" "might" "also" "more" "most" "some" "all" "any" "each" "every" "who" "whom" "which" "what" "when" "where" "why" "how" "about" "between" "among" "through" "over" "under" "after" "before" "upon" "across" "per" "vs" "de" "la" "les" "et" "du" }}
+
+{{ $candidates := where site.RegularPages "Section" "publication" }}
+{{ $candidates = $candidates | complement (slice $page) }}
+
+{{ $myTokens := slice }}
+{{ range (split (lower $page.Title) " ") }}
+  {{ $t := replaceRE `[^a-z0-9]` "" . }}
+  {{ if and (ge (len $t) 3) (not (in $stopwords $t)) }}
+    {{ $myTokens = $myTokens | append $t }}
+  {{ end }}
+{{ end }}
+{{ $myAuthors := $page.Params.authors | default slice }}
+{{ $myTags := $page.Params.tags | default slice }}
+{{ $myAreas := $page.Params.research_areas | default slice }}
+
+{{ $picked := slice }}
+{{ $pickedSlugs := newScratch }}
+
+{{/* Priority 1: explicit related_* front matter */}}
+{{ $explicitSlugs := slice }}
+{{ with $page.Params.related_papers }}{{ $explicitSlugs = $explicitSlugs | append . }}{{ end }}
+{{ with $page.Params.related_paper }}{{ $explicitSlugs = $explicitSlugs | append . }}{{ end }}
+
+{{ range $explicitSlugs }}
+  {{ $slug := . }}
+  {{ with site.GetPage (printf "publication/%s" $slug) }}
+    {{ if not ($pickedSlugs.Get $slug) }}
+      {{ $pickedSlugs.Set $slug true }}
+      {{ $picked = $picked | append (dict "page" . "score" 100) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Priority 2: same research area */}}
+{{ if gt (len $myAreas) 0 }}
+  {{ range $candidates }}
+    {{ $c := . }}
+    {{ $slug := path.Base $c.File.Dir }}
+    {{ if not ($pickedSlugs.Get $slug) }}
+      {{ $cAreas := $c.Params.research_areas | default slice }}
+      {{ $overlap := false }}
+      {{ range $myAreas }}{{ if in $cAreas . }}{{ $overlap = true }}{{ end }}{{ end }}
+      {{ if $overlap }}
+        {{ $pickedSlugs.Set $slug true }}
+        {{ $picked = $picked | append (dict "page" $c "score" 6) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Priority 3: scoring backfill */}}
+{{ range $candidates }}
+  {{ $c := . }}
+  {{ $slug := path.Base $c.File.Dir }}
+  {{ if not ($pickedSlugs.Get $slug) }}
+    {{ $score := 0 }}
+    {{ $cTokens := slice }}
+    {{ range (split (lower $c.Title) " ") }}
+      {{ $t := replaceRE `[^a-z0-9]` "" . }}
+      {{ if and (ge (len $t) 3) (not (in $stopwords $t)) }}
+        {{ $cTokens = $cTokens | append $t }}
+      {{ end }}
+    {{ end }}
+    {{ range $myTokens }}{{ if in $cTokens . }}{{ $score = add $score 2 }}{{ end }}{{ end }}
+    {{ $cAuthors := $c.Params.authors | default slice }}
+    {{ range $myAuthors }}{{ if in $cAuthors . }}{{ $score = add $score 1 }}{{ end }}{{ end }}
+    {{ $cTags := $c.Params.tags | default slice }}
+    {{ range $myTags }}{{ if in $cTags . }}{{ $score = add $score 2 }}{{ end }}{{ end }}
+    {{ if ge $score 4 }}
+      {{ $pickedSlugs.Set $slug true }}
+      {{ $picked = $picked | append (dict "page" $c "score" $score) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Relax threshold if fewer than 3 picks so far */}}
+{{ if lt (len $picked) 3 }}
+  {{ range $candidates }}
+    {{ $c := . }}
+    {{ $slug := path.Base $c.File.Dir }}
+    {{ if not ($pickedSlugs.Get $slug) }}
+      {{ $score := 0 }}
+      {{ $cTokens := slice }}
+      {{ range (split (lower $c.Title) " ") }}
+        {{ $t := replaceRE `[^a-z0-9]` "" . }}
+        {{ if and (ge (len $t) 3) (not (in $stopwords $t)) }}
+          {{ $cTokens = $cTokens | append $t }}
+        {{ end }}
+      {{ end }}
+      {{ range $myTokens }}{{ if in $cTokens . }}{{ $score = add $score 2 }}{{ end }}{{ end }}
+      {{ $cAuthors := $c.Params.authors | default slice }}
+      {{ range $myAuthors }}{{ if in $cAuthors . }}{{ $score = add $score 1 }}{{ end }}{{ end }}
+      {{ if ge $score 2 }}
+        {{ $pickedSlugs.Set $slug true }}
+        {{ $picked = $picked | append (dict "page" $c "score" $score) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ $sorted := sort $picked "score" "desc" }}
+
+{{/* Title-level dedup: normalize titles and skip duplicates, then cap at 8. */}}
+{{ $seenTitles := newScratch }}
+{{ $final := slice }}
+{{ range $sorted }}
+  {{ if lt (len $final) 8 }}
+    {{ $norm := replaceRE `[^a-z0-9]` "" (lower .page.Title) }}
+    {{ if not ($seenTitles.Get $norm) }}
+      {{ $seenTitles.Set $norm true }}
+      {{ $final = $final | append . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if gt (len $final) 0 }}
+<div class="gk-see-also">
+  <h2>See also</h2>
+  <ul>
+    {{ range $final }}
+      {{ $p := .page }}
+      {{ $types := $p.Params.publication_types | default slice }}
+      {{ $label := "Paper" }}
+      {{ if in $types "report" }}{{ $label = "Working Paper" }}{{ end }}
+      <li><span class="gk-kind-label">{{ $label }}</span> <a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></li>
+    {{ end }}
+  </ul>
+</div>
+{{ end }}

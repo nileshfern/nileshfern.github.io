@@ -1,0 +1,51 @@
+{{/* Invisible mysite discovery metadata (opt-out via params.mysite.discovery) */}}
+{{ if ne site.Params.mysite.discovery false }}
+<meta name="generator" content="Created using GaryKing.org/mysite (https://gking.harvard.edu/mysite)">
+{{ if .IsHome }}
+{{ $person := dict
+  "@context" "https://schema.org"
+  "@type" "Person"
+  "name" "A. Nilesh Fernando"
+  "affiliation" (dict "@type" "Organization" "name" "King's College London")
+  "url" site.BaseURL
+  "isBasedOn" "https://gking.harvard.edu/mysite"
+}}
+<script type="application/ld+json">{{ $person | jsonify | safeJS }}</script>
+{{ end }}
+{{ end }}
+
+{{/* Scholarly metadata for AI & search visibility: Google Scholar tags + ScholarlyArticle JSON-LD */}}
+{{ if eq .Section "publication" }}
+  {{ $p := . }}
+  <meta name="citation_title" content="{{ .Title | plainify }}">
+  {{ range .Params.authors }}<meta name="citation_author" content="{{ . }}">
+  {{ end }}
+  {{ if .Params.date }}<meta name="citation_publication_date" content="{{ .Params.date | time.Format "2006/01/02" }}">{{ end }}
+  {{ range .Params.links }}
+    {{ if eq .type "pdf" }}
+      {{ $u := .url }}
+      {{ with ($p.Resources.GetMatch $u) }}<meta name="citation_pdf_url" content="{{ .Permalink }}">{{ else }}<meta name="citation_pdf_url" content="{{ $u | absURL }}">{{ end }}
+    {{ end }}
+    {{ if eq .type "doi" }}<meta name="citation_doi" content="{{ replace .url "https://doi.org/" "" }}">{{ end }}
+  {{ end }}
+  {{ if .Params.publication }}<meta name="citation_journal_title" content="{{ .Params.publication }}">{{ end }}
+
+  {{ $abstract := .Params.abstract | plainify | htmlUnescape }}
+  {{ $doi := "" }}
+  {{ range .Params.links }}{{ if eq .type "doi" }}{{ $doi = .url }}{{ end }}{{ end }}
+  {{ $authorObjs := slice }}
+  {{ range .Params.authors }}{{ $authorObjs = $authorObjs | append (dict "@type" "Person" "name" .) }}{{ end }}
+  {{ $schemaType := "ScholarlyArticle" }}
+  {{ if in (.Params.publication_types | default slice) "book" }}{{ $schemaType = "Book" }}{{ end }}
+  {{ $article := dict
+    "@context" "https://schema.org"
+    "@type" $schemaType
+    "headline" (.Title | plainify)
+    "author" $authorObjs
+    "datePublished" .Params.date
+    "abstract" $abstract
+    "url" .Permalink
+  }}
+  {{ with $doi }}{{ $article = merge $article (dict "identifier" . "sameAs" .) }}{{ end }}
+  <script type="application/ld+json">{{ $article | jsonify | safeJS }}</script>
+{{ end }}

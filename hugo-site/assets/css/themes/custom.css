@@ -1,0 +1,28 @@
+/* Hugo Blox color theme: CUSTOM (A. Nilesh Fernando) */
+:root {
+  /* Primary: burgundy accent */
+  --hb-primary-50-rgb: 250 235 236;
+  --hb-primary-100-rgb: 243 213 216;
+  --hb-primary-200-rgb: 230 174 180;
+  --hb-primary-300-rgb: 210 128 138;
+  --hb-primary-400-rgb: 180 82 95;
+  --hb-primary-500-rgb: 148 51 64;
+  --hb-primary-600-rgb: 122 35 49;
+  --hb-primary-700-rgb: 92 26 36;
+  --hb-primary-800-rgb: 66 19 26;
+  --hb-primary-900-rgb: 44 13 17;
+  --hb-primary-950-rgb: 26 8 10;
+
+  /* Secondary: warm cream/tan for surfaces and muted text */
+  --hb-secondary-50-rgb: 250 243 226;
+  --hb-secondary-100-rgb: 243 232 206;
+  --hb-secondary-200-rgb: 236 223 190;
+  --hb-secondary-300-rgb: 226 211 172;
+  --hb-secondary-400-rgb: 196 176 132;
+  --hb-secondary-500-rgb: 158 137 100;
+  --hb-secondary-600-rgb: 122 106 86;
+  --hb-secondary-700-rgb: 90 78 63;
+  --hb-secondary-800-rgb: 58 50 41;
+  --hb-secondary-900-rgb: 36 31 26;
+  --hb-secondary-950-rgb: 20 17 14;
+}

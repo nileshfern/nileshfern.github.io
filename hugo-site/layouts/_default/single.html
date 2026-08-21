@@ -1,0 +1,14 @@
+{{ define "main" }}
+<a class="skip-link" href="#gk-content">Skip to content</a>
+<div class="gk-container gk-main" id="gk-content">
+  <nav class="gk-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ site.Home.RelPermalink }}">Home</a> / <span>{{ .Title }}</span>
+  </nav>
+  <header class="gk-page-header">
+    <h1>{{ .Title }}</h1>
+  </header>
+  <div class="gk-prose">
+    {{ .Content }}
+  </div>
+</div>
+{{ end }}

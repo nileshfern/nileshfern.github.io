@@ -1,0 +1,70 @@
+baseURL: "https://www.nileshfernando.com/"
+title: "A. Nilesh Fernando"
+locale: en-us
+enableRobotsTXT: true
+
+module:
+  imports:
+    - path: github.com/HugoBlox/hugo-blox-builder/modules/blox-tailwind
+
+outputs:
+  home: [HTML, RSS, JSON]
+
+params:
+  appearance:
+    color: custom
+    mode: light
+  header:
+    navbar:
+      enable: true
+      show_search: true
+      show_theme_chooser: false
+      align: right
+      logo:
+        text: "A. NILESH FERNANDO"
+  footer:
+    section: minimal
+  features:
+    search:
+      provider: pagefind
+  extensions:
+    css:
+      - css/custom.css
+  marketing:
+    seo:
+      site_type: Person
+      description: "A. Nilesh Fernando is an Associate Professor of Economics at King's Business School, King's College London, and an applied microeconomist working on labor and development economics."
+  mysite:
+    credit: false
+    discovery: false
+    owner_name: "A. Nilesh Fernando"
+    owner_institution: "King's College London"
+
+disableKinds: ["taxonomy", "term"]
+
+menu:
+  main:
+    - name: CV
+      url: "https://www.nileshfernando.com/files/CV.pdf"
+      weight: 10
+    - name: Research
+      url: /publication/
+      weight: 20
+    - name: Teaching
+      url: /teaching/
+      weight: 30
+    - name: Policy & Impact
+      url: /policy/
+      weight: 40
+    - name: Data & Code
+      url: /data-code/
+      weight: 50
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+security:
+  exec:
+    allow: ['^(dart-)?sass$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$', '^npx$']

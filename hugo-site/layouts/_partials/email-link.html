@@ -1,0 +1,28 @@
+{{/*
+  Spam-proof email address. Input: dict { user, domain }.
+  The address is base64-encoded at build time so no recognizable fragment of it (no "@", no
+  username, no domain/TLD substring) ever appears in the rendered HTML — only an opaque blob that
+  is decoded and assembled into a real mailto link by JS in the visitor's browser. A no-JS
+  fallback avoids printing the address in any human-readable form, since even a lightly
+  obfuscated "name [at] domain" string is routinely harvested by spam scrapers.
+*/}}
+{{ $addr := printf "%s@%s" .user .domain }}
+<span class="gk-email" data-e="{{ $addr | base64Encode }}">
+  <noscript>Enable JavaScript to see my email address.</noscript>
+</span>
+<script>
+(function () {
+  document.querySelectorAll(".gk-email").forEach(function (el) {
+    if (el.dataset.gkDone) return;
+    var enc = el.getAttribute("data-e");
+    if (!enc) return;
+    var addr = atob(enc);
+    var a = document.createElement("a");
+    a.href = "mailto:" + addr;
+    a.textContent = addr;
+    el.textContent = "";
+    el.appendChild(a);
+    el.dataset.gkDone = "1";
+  });
+})();
+</script>
