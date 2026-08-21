@@ -109,6 +109,19 @@ in `hugo.yaml`). `tags:` front matter is still used — just as plain data read 
 site links to them and they'd otherwise be unstyled orphan pages outside the site's actual
 information architecture (Research Areas, not raw tags, is the browsing structure here).
 
+## `package-lock.json` is deliberately not committed
+
+`npm` on this machine (11.9.0, macOS) reproducibly writes a nested `lightningcss` platform-optional
+entry (`lightningcss-linux-x64-musl`) with a missing `"version"` field — harmless to that npm
+version, but the newer npm bundled with GitHub Actions' Node 24 runners refuses to even *parse*
+a lockfile containing it, failing instantly with `npm error Invalid Version:` on both `npm ci` and
+`npm install`. Regenerating the lockfile from scratch doesn't help; it recurs every time. Simplest
+fix: don't commit the lockfile at all (`package-lock.json` is gitignored) — CI runs plain `npm
+install` with no pre-existing lockfile, so it resolves and writes its own valid one using its own
+npm, with nothing cross-machine to conflict. If you ever want lockfile reproducibility back, it
+would need generating from a Linux npm environment (e.g., inside the same runner image), not from
+this Mac.
+
 ## Local environment note (not relevant to CI)
 
 If you build this locally on Apple Silicon under a Rosetta-translated (Intel) Homebrew `hugo`,
@@ -116,4 +129,4 @@ the Tailwind CSS v4 native bindings (`@tailwindcss/oxide`, `lightningcss`) may n
 `-darwin-x64` optional variants force-installed into `node_modules` alongside the `-darwin-arm64`
 ones npm picks by default (`npm install <pkg>-darwin-x64@<version> --force --no-save`). This is a
 local toolchain quirk only — GitHub Actions runs on Linux and resolves the correct platform
-binaries on its own via `npm ci`.
+binaries on its own.
