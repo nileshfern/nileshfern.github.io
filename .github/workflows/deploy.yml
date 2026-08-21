@@ -41,7 +41,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # Hugo's TailwindCSS integration invokes node with a --permission flag Node 20 rejects.
+          node-version: "22"
 
       - name: Install Node.js dependencies
         # `npm ci` chokes on a known npm quirk with nested platform-optional dependencies
