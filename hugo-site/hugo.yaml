@@ -22,6 +22,7 @@ params:
       align: right
       logo:
         text: "A. NILESH FERNANDO"
+        subtitle: "Associate Professor, King's College London"
   footer:
     section: minimal
   features:
