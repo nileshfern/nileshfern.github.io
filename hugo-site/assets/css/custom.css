@@ -328,18 +328,8 @@ a:hover {
 }
 
 /* ==========================================================================
-   Writings list page (tabs + sidebar + filterable list)
+   Research list page (tabs + filterable list)
    ========================================================================== */
-.gk-writings-layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 2.5rem;
-  align-items: start;
-}
-@media (max-width: 860px) {
-  .gk-writings-layout { grid-template-columns: 1fr; }
-}
-
 .gk-pub-tabs {
   position: sticky;
   top: 0;
@@ -368,73 +358,6 @@ a:hover {
   color: var(--color-institution);
   border-bottom-color: var(--color-institution);
 }
-
-.gk-sidebar {
-  position: sticky;
-  top: 4.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: var(--color-surface);
-  padding: 1.1rem;
-}
-.gk-sidebar h3 {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-  margin: 1.1rem 0 0.5rem;
-}
-.gk-sidebar h3:first-child { margin-top: 0; }
-.gk-sidebar input[type="text"],
-.gk-sidebar select {
-  width: 100%;
-  padding: 0.5em 0.6em;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: var(--color-bg);
-  font-size: 0.88rem;
-  color: var(--color-text);
-}
-.gk-sidebar input[type="text"]:focus,
-.gk-sidebar select:focus { border-color: var(--color-institution); }
-
-.gk-check-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-.gk-check-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.88rem;
-  color: var(--color-text);
-}
-.gk-check-row input[type="checkbox"] {
-  flex-shrink: 0;
-  width: 15px;
-  height: 15px;
-  accent-color: var(--color-institution);
-}
-.gk-year-scroll {
-  max-height: 200px;
-  overflow-y: auto;
-  padding-right: 0.25rem;
-}
-
-.gk-reset-btn {
-  margin-top: 1.1rem;
-  width: 100%;
-  padding: 0.5em;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: var(--color-bg);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  cursor: pointer;
-}
-.gk-reset-btn:hover { color: var(--color-text); border-color: var(--color-text-muted); }
 
 .gk-toolbar {
   display: flex;
