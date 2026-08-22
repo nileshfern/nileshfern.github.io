@@ -630,8 +630,8 @@ img { max-width: 100%; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 68px;
-  height: 68px;
+  width: 51px;
+  height: 51px;
   border-radius: 50%;
   background: var(--color-bg);
   border: 1px solid var(--color-border);
