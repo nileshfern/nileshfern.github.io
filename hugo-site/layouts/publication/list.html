@@ -35,9 +35,6 @@
 
   <div class="gk-writings-layout">
     <aside class="gk-sidebar" aria-label="Filter research">
-      <h3>Search</h3>
-      <input type="text" id="gk-search" placeholder="Title, author, venue...">
-
       <h3>Research area</h3>
       <select id="gk-area-filter">
         <option value="">All areas</option>
@@ -100,7 +97,6 @@
   var items = Array.prototype.slice.call(document.querySelectorAll('.pub-item'));
   var tabs = document.querySelectorAll('.tab-btn');
   var countEl = document.querySelector('.result-count');
-  var searchEl = document.getElementById('gk-search');
   var areaEl = document.getElementById('gk-area-filter');
   var sortEl = document.getElementById('gk-sort');
   var yearCbs = document.querySelectorAll('.gk-year-cb');
@@ -112,7 +108,6 @@
   }
 
   function applyFilters() {
-    var q = (searchEl.value || '').toLowerCase().trim();
     var area = areaEl.value;
     var years = activeYears();
     var visible = 0;
@@ -124,10 +119,6 @@
       }
       if (show && years.length) {
         show = years.indexOf(item.dataset.year) !== -1;
-      }
-      if (show && q) {
-        var hay = item.dataset.title + ' ' + item.dataset.authors + ' ' + item.dataset.venue + ' ' + item.dataset.abstract;
-        show = hay.indexOf(q) !== -1;
       }
       item.style.display = show ? '' : 'none';
       if (show) visible++;
@@ -161,13 +152,11 @@
     btn.addEventListener('click', function() { filterByTab(btn.dataset.tab); });
   });
 
-  searchEl.addEventListener('input', applyFilters);
   areaEl.addEventListener('change', applyFilters);
   yearCbs.forEach(function(cb) { cb.addEventListener('change', applyFilters); });
   sortEl.addEventListener('change', applySort);
 
   document.getElementById('gk-reset').addEventListener('click', function() {
-    searchEl.value = '';
     areaEl.value = '';
     yearCbs.forEach(function(cb) { cb.checked = false; });
     sortEl.value = 'newest';
