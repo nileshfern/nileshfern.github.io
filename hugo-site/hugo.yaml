@@ -35,6 +35,8 @@ params:
     seo:
       site_type: Person
       description: "A. Nilesh Fernando is an Associate Professor of Economics at King's Business School, King's College London, and an applied microeconomist working on labor and development economics."
+    analytics:
+      google_analytics: "G-2DK0YMRRQ7"
   mysite:
     credit: false
     discovery: false
