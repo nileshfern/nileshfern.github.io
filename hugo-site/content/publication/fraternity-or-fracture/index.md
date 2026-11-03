@@ -1,7 +1,7 @@
 ---
 title: "Fraternity or Fracture? National Identity, Religious Minorities, and Communal Violence in India"
 date: 2024-02-01
-authors: ["A. Nilesh Fernando", "Layton Hall"]
+authors: ["A. Nilesh Fernando","Humoyun Abdumavlon", "Layton Hall"]
 publication_types: ["report"]
 publication: "Working paper"
 abstract: "Using the India-Pakistan cricket rivalry as a shock to national identity, this paper finds that when India loses to Pakistan, Indian districts with a significant Muslim minority see a seven-fold increase in rioting — a pattern absent after India loses to other countries. The result points to the fragility of national identity for religious minorities in the aftermath of an intergroup loss."
