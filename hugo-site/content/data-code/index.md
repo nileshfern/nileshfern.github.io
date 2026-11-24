@@ -6,6 +6,16 @@ summary: "Replication data and code for A. Nilesh Fernando's published research.
 <ol class="gk-numbered-list">
 <li>
 
+[The Grass is Not Always Greener: The Effects of Local Labor Market Information on Search and Employment](/publication/labor-market-information/)
+
+<div class="gk-sublinks">
+
+[Data & Code (ICPSR)](https://www.icpsr.umich.edu/sites/icpsr/view/studies/319074/versions/V1)
+
+</div>
+</li>
+<li>
+
 [Regulation by Reputation? Intermediaries, Labor Abuses, and International Migration](/publication/regulation-by-reputation/)
 
 <div class="gk-sublinks">
